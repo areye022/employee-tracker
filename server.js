@@ -51,13 +51,19 @@ async function updateTracker(){
                     },
                     {
                         type:"input",
-                        message:"what is the new employees role id?",
+                        message:"what is their role's id?",
                         name:"role_id"
-                    }
+                    },
+                    {
+                        type:"input",
+                        message:"what is their manager's id?",
+                        name:"manager_id"
+                    },
+                    
                 ]).then(res=>{
                     console.log(res);
-                    connection.query("INSERT INTO employee (first_name,last_name, role_id) VALUES (?,?,?)",
-                    [res.first_name, res.last_name, res.role_id], function(err,res2){
+                    connection.query("INSERT INTO employee (first_name,last_name, role_id, manager_id) VALUES (?,?,?,?)",
+                    [res.first_name, res.last_name, res.role_id, res.manager_id], function(err,res2){
                         console.log(res2)
                         // console.table(res2);
                     })
