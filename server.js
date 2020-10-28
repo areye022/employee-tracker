@@ -12,7 +12,8 @@ async function updateTracker(){
             type: "list",
             message: "What would you like to do?",
             name: "toDo",
-            choices:["view departments","add department", "view employees", "add employee"]
+            choices:["view departments","add department", "view employees",
+            "add employee", "view roles", "add roles"]
         }
     ])
         switch (toDo) {
@@ -54,10 +55,41 @@ async function updateTracker(){
                         name:"role_id"
                     }
                 ]).then(res=>{
-                    connection.query("INSERT INTO employee (first_name,last_name, role_id) VALUES (?,?,?)", [res.first_name, res.last_name, res.role_id], function(err,res2){
+                    console.log(res);
+                    connection.query("INSERT INTO employee (first_name,last_name, role_id) VALUES (?,?,?)",
+                    [res.first_name, res.last_name, res.role_id], function(err,res2){
+                        console.log(res2)
+                        // console.table(res2);
+                    })
+            })
+            case "view roles":
+                connection.query("SELECT * FROM role", function(err,res){
+                    console.table(res);
+            })
+            case "add roles":
+                await inquirer.prompt([
+                    {
+                        type:"input",
+                        message:"what role would you like to add?",
+                        name:"title"
+                    },
+                    {
+                        type:"input",
+                        message:"what is the salary for this role?",
+                        name:"salary"
+                    },
+                    {
+                        type:"input",
+                        message:"what is the department id?",
+                        name:"department_id"
+                    }
+                ]).then(res=>{
+                    connection.query("INSERT INTO role (title, salary, department_id) VALUES (?,?,?)",
+                    [res.title,res.salary,res.department_id], function(err,res2){
                         console.table(res2);
                     })
             })
+
     }
 }
 
