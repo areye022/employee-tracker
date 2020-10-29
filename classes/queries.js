@@ -14,7 +14,9 @@ class Queries {
         
     }
     getDepartment() {
-        return this.connection.query("SELECT * FROM department")
+        return this.connection.query("SELECT * FROM department",function(err,res){
+            console.table(res);
+        })
     }
 
 };
