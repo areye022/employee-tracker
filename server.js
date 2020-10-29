@@ -13,14 +13,18 @@ async function updateTracker(){
             message: "What would you like to do?",
             name: "toDo",
             choices:["view departments","add department", "view employees",
-            "add employee", "view roles", "add roles"]
+            "add employee", "view roles", "add roles","update role"]
         }
     ])
         switch (toDo) {
             case "view departments":
                 connection.query("SELECT * FROM department", function(err,res){
                     console.table(res);
+                    // when I use update tracker, it will not wait allow the inquirer prompts to be answered
+                    // because it immediately calls on the update tracker prompts 
+                        updateTracker();
             })
+            // whenever I choose the add department section, the view employees section is shown in the CL
             case "add department":
                 await inquirer.prompt([
                     {
@@ -31,8 +35,9 @@ async function updateTracker(){
                 ]).then(res=>{
                     connection.query("INSERT INTO department (name) VALUES (?)", [res.departmentName], function(err,res2){
                         console.table(res2);
+                        updateTracker();
                     })
-            })
+            });
             case "view employees":
                 connection.query("SELECT * FROM employee", function(err,res){
                     console.table(res);
@@ -95,8 +100,19 @@ async function updateTracker(){
                         console.table(res2);
                     })
             })
-
+            case "update role":
+                await inquirer.prompt([
+                    {
+                        type:"list",
+                        message: "What paramater within roles would you like to update?",
+                        name: "update_role",
+                        choices: ["update title", "update salary","update department id"]
+                    }
+                ])
+// .then, created a nested case that then inquires more questions per each option that is provided
     }
 }
-
+// UPDATE movies
+// SET director = "John Lasseter"
+// WHERE id = 2;
 updateTracker();
