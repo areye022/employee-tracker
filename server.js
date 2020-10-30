@@ -19,13 +19,10 @@ async function updateTracker(){
         switch (toDo) {
             case "view departments":
                 connection.query("SELECT * FROM department", function(err,res){
-                    console.table(res);
-                    // when I use update tracker, it will not wait allow the inquirer prompts to be answered
-                    // because it immediately calls on the update tracker prompts 
-                    break;
+                    console.table(res); 
                         updateTracker();
             })
-            // whenever I choose the add department section, the view employees section is shown in the CL
+            break
             case "add department":
                 await inquirer.prompt([
                     {
@@ -36,14 +33,16 @@ async function updateTracker(){
                 ]).then(res=>{
                     connection.query("INSERT INTO department (name) VALUES (?)", [res.departmentName], function(err,res2){
                         console.table(res2);
-                        
+                        updateTracker();
                     })
-            });
+            })
+            break
             case "view employees":
                 connection.query("SELECT * FROM employee", function(err,res){
                     console.table(res);
-                    
+                    updateTracker();                    
             })
+            break
             case "add employee":
                 await inquirer.prompt([
                     {
@@ -65,22 +64,23 @@ async function updateTracker(){
                         type:"input",
                         message:"what is their manager's id?",
                         name:"manager_id"
-                    },
+                    }
                     
                 ]).then(res=>{
                     console.log(res);
                     connection.query("INSERT INTO employee (first_name,last_name, role_id, manager_id) VALUES (?,?,?,?)",
                     [res.first_name, res.last_name, res.role_id, res.manager_id], function(err,res2){
                         console.log(res2);
-                        
-                        // console.table(res2);
+                        updateTracker();
                     })
             })
+            break
             case "view roles":
                 connection.query("SELECT * FROM role", function(err,res){
                     console.table(res);
-                    
+                    updateTracker();
             })
+            break
             case "add roles":
                 await inquirer.prompt([
                     {
@@ -102,14 +102,16 @@ async function updateTracker(){
                     connection.query("INSERT INTO role (title, salary, department_id) VALUES (?,?,?)",
                     [res.title,res.salary,res.department_id], function(err,res2){
                         console.table(res2);
-                        
+                        updateTracker();
                     })
             })
+            break
             case "update role":
                 updateRole();
+            break
             case "quit":
                 console.log("Done updating our employee tracker!")
-                break;
+                
     };
 };
 
