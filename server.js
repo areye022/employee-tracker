@@ -1,11 +1,11 @@
-const fs = require("fs");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
 
 // classes
-const Queries = require("./classes/queries");
+// const Queries = require("./classes/queries");
 const connection= require("./connection")
 
+// function that provides all potential actions
 async function updateTracker(){
     const { toDo } = await inquirer.prompt([
         {
@@ -18,6 +18,7 @@ async function updateTracker(){
     ])
         switch (toDo) {
             case "view departments":
+                // prompting department table
                 connection.query("SELECT * FROM department", function(err,res){
                     console.table(res); 
                         updateTracker();
@@ -38,6 +39,7 @@ async function updateTracker(){
             })
             break
             case "view employees":
+                // prompting all employees
                 connection.query("SELECT * FROM employee", function(err,res){
                     console.table(res);
                     updateTracker();                    
@@ -65,9 +67,8 @@ async function updateTracker(){
                         message:"what is their manager's id?",
                         name:"manager_id"
                     }
-                    
                 ]).then(res=>{
-                    console.log(res);
+                    // to add a new employee
                     connection.query("INSERT INTO employee (first_name,last_name, role_id, manager_id) VALUES (?,?,?,?)",
                     [res.first_name, res.last_name, res.role_id, res.manager_id], function(err,res2){
                         console.log(res2);
@@ -76,6 +77,7 @@ async function updateTracker(){
             })
             break
             case "view roles":
+                // to view roles
                 connection.query("SELECT * FROM role", function(err,res){
                     console.table(res);
                     updateTracker();
@@ -99,6 +101,7 @@ async function updateTracker(){
                         name:"department_id"
                     }
                 ]).then(res=>{
+                    // adding a new role
                     connection.query("INSERT INTO role (title, salary, department_id) VALUES (?,?,?)",
                     [res.title,res.salary,res.department_id], function(err,res2){
                         console.table(res2);
@@ -107,11 +110,12 @@ async function updateTracker(){
             })
             break
             case "update role":
+                // created separate function for updating role to prevent confusion with nested inquire.prompts
                 updateRole();
+                
             break
             case "quit":
                 console.log("Done updating our employee tracker!")
-                
     };
 };
 
@@ -124,6 +128,7 @@ async function updateRole(){
             choices: ["update title", "update salary","update department id"]
         }
     ]) 
+    // switch statements for the updating all aspects of roles
     switch (update_role){
         case "update title":
             inquirer.prompt([
@@ -138,12 +143,13 @@ async function updateRole(){
                     name:"newTitle"
                 }
             ]).then(res=>{
-                console.log(res);
+                // updating only title
                 connection.query("UPDATE role SET title = ? WHERE id = ? ",
                 [res.newTitle,res.id], function(err, res2){
                     console.log(res2);
                 })
             })
+        break
         case "update salary":
             inquirer.prompt([
                 {
@@ -157,12 +163,14 @@ async function updateRole(){
                     name:"newSalary"
                 }
             ]).then(res=>{
-                console.log(res);
+                // updating only the salary
                 connection.query("UPDATE role SET salary = ? WHERE id = ? ",
                 [res.newSalary,res.id], function(err, res2){
                     console.log(res2);
+                    updateTracker();
                 })
             })
+            break
             case "update department id":
             inquirer.prompt([
                 {
@@ -176,15 +184,17 @@ async function updateRole(){
                     name:"newDepId"
                 }
             ]).then(res=>{
-                console.log(res);
+                // updating only the id
                 connection.query("UPDATE role SET department_id = ? WHERE id = ? ",
                 [res.newDepId,res.id], function(err, res2){
                     console.log(res2);
+                    updateTracker();
                 })
             })
-            
-    }
-}
+            break
+    };
+};
 
 updateTracker();
+// originally tried to have everything inside the queries class, but was not functioning properly, will do this at a later time.
 // Queries.getDepartment();
