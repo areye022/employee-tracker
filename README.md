@@ -2,10 +2,10 @@
 
 ### Deployed Application 
 
-[Video of Team Generator](https://drive.google.com/file/d/1cBS8kHBCvfcbWyq_U-khE6j64lIoTCsl/view)
+[Video of Employee Tracker](https://drive.google.com/file/d/1cBS8kHBCvfcbWyq_U-khE6j64lIoTCsl/view)
 
-![Screenshot of generator](./assets/image1.JPG)
-![Screenshot of generator](./assets/image2.JPG)
+![Screenshot of Employee Tracker](./assets/image1.JPG)
+![Screenshot of Employee Tracker](./assets/image2.JPG)
 
 
 ### Description 
